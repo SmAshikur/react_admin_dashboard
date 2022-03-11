@@ -1,28 +1,37 @@
 import * as React from 'react';
-import IconButton from '@mui/material/IconButton';
+ 
 import Box from '@mui/material/Box';
 import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { AppBar,Paper, Typography } from '@mui/material';
-import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+ 
+
+ 
 import Sidebar from './Components/Sidebar';
-import { borderRadius } from '@mui/system';
+ 
+import Topbar from './Components/Topbar';
+import Main from './Components/Main/Main';
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
 function MyApp() {
-  const [sidebarWidth,setSidebarWidth]= React.useState(230);
+  const [sidebarWidth,setSidebarWidth]= React.useState(250);
   const [topbarWidth,setTopbarWidth]= React.useState(270);
   const [mainbarWidth,setMainbarWidth]= React.useState(280);
+  const [sidebarWidthXs,setSidebarWidthXs]= React.useState(0);
   
- 
   const sideMode = React.useMemo(
     () => ({
        changeSidebar : () => {
-        setSidebarWidth((prevMode) => (prevMode === 230 ? 60 : 230));
+        setSidebarWidth((prevMode) => (prevMode === 250 ? 60 : 250));
         setTopbarWidth((prevMode) => (prevMode === 270 ? 90 : 270));
         setMainbarWidth((prevMode) => (prevMode === 280 ? 100 : 280));
+      }
+    }),
+    [],
+  );
+  const sideModeXs = React.useMemo(
+    () => ({
+      changeSidebarXs : () => {
+        setSidebarWidthXs((prevMode) => (prevMode === 0 ? 250 : 0));
       }
     }),
     [],
@@ -32,39 +41,7 @@ function MyApp() {
   return (
     <div  >
    
-    <AppBar  sx={{
-       display: 'flex',
-       position:"fixed",
-       top:"20px",
-       left:{md:`${topbarWidth}px`,xs:'20px'},
-       justifyContent:"end",
-       flexDirection:"row",
-       padding:'10px',
-       bgcolor:"#533E85",
-       opacity:"0.5",
-       width:"auto",
-       borderRadius:"10px",
-       right:"20px",
-       transition: "all 0.2s ease-in",
-       
-    }}>
-      <Box sx={{marginTop:"5px",position:"absolute",left:'20px','&:hover': {
-    backgroundColor: '#ffffff',
-    boxShadow: 'none',
-    color:'blueviolet',
-    borderRadius:'25%',
-  },}}>
-        <MenuOutlinedIcon sx={{ marginTop:"5px"  }} onClick={sideMode.changeSidebar} />
-      </Box>
- 
-     <Box sx={{
-
-     }}>
-      <IconButton sx={{ ml: 5 }} onClick={colorMode.toggleColorMode} color="inherit">
-        {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-      </IconButton>
-     </Box>
-   </AppBar>
+    <Topbar sideMode={sideMode.changeSidebar}  sideModeXs={sideModeXs.changeSidebarXs} colorMode={colorMode.toggleColorMode} topbarWidth={topbarWidth} theme={theme.palette.mode}/>
    
     <Box
       sx={{
@@ -79,51 +56,8 @@ function MyApp() {
         p: 0,
       }}
     >
-      <Paper  sx={{
-      //  display: {md:'flex',xs:'none'},
-       position:"fixed",
-       top:"0",
-       left:"0",
-       bottom:'0',
-       justifyContent:"end",
-       flexDirection:"row",
-       padding:{md:"10px",xs:""},
-       bgcolor:"#533E85",
-       opacity:"0.7",
-       width:{md:`${sidebarWidth}px`, xs:"0px"},
-       transition: "all 0.2s ease-in",
-       boxSizing: "border-box",
-       overflow:'hidden'
-        
-       
-    }}>
-      <Box sx={{width:'100%', bgcolor:"#f4f4fd",overflow:"hidden"}}>
-      
-      </Box>
-       
-      
-      </Paper>
-     <Paper  sx={{
-       display: 'flex',
-       position:"fixed",
-       top:"100px",
-       left:{md:`${mainbarWidth}px`,xs:'30px'},
-       justifyContent:"end",
-       flexDirection:"row",
-       padding:'10px',
-       bgcolor:"#533E85",
-       opacity:"0.6",
-       width:"auto",
-       height:"auto",
-       borderRadius:"10px",
-       right:"30px",
-       bottom:"20px",
-       transition: "all 0.2s ease-in",      
-    }}></Paper>
-      
-     
-     
-      
+      <Sidebar sidebarWidth={sidebarWidth} sidebarWidthXs={sidebarWidthXs}/>
+     <Main mainbarWidth={mainbarWidth}/>  
     </Box>
      
    </div>
