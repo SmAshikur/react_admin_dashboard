@@ -9,6 +9,7 @@ import Sidebar from './Components/Sidebar';
  
 import Topbar from './Components/Topbar';
 import Main from './Components/Main/Main';
+//import { Button } from '@mui/material';
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
@@ -21,7 +22,7 @@ function MyApp() {
   const sideMode = React.useMemo(
     () => ({
        changeSidebar : () => {
-        setSidebarWidth((prevMode) => (prevMode === 250 ? 60 : 250));
+        setSidebarWidth((prevMode) => (prevMode === 250 ? 70 : 250));
         setTopbarWidth((prevMode) => (prevMode === 270 ? 90 : 270));
         setMainbarWidth((prevMode) => (prevMode === 280 ? 100 : 280));
       }
@@ -32,17 +33,28 @@ function MyApp() {
     () => ({
       changeSidebarXs : () => {
         setSidebarWidthXs((prevMode) => (prevMode === 0 ? 250 : 0));
-      }
+      },
+      
     }),
     [],
   );
+  const sideModeXz = React.useMemo(
+    ()=>({
+      hideSidebar:()=> {
+        if(sidebarWidthXs===250){
+          setSidebarWidthXs(0)
+          
+        }
+      }
+    }),[sidebarWidthXs]
+  )
+
   const theme = useTheme();
   const colorMode = React.useContext(ColorModeContext);
   return (
     <div  >
    
-    <Topbar sideMode={sideMode.changeSidebar}  sideModeXs={sideModeXs.changeSidebarXs} colorMode={colorMode.toggleColorMode} topbarWidth={topbarWidth} theme={theme.palette.mode}/>
-   
+    
     <Box
       sx={{
         display: 'flex',
@@ -52,12 +64,21 @@ function MyApp() {
         top:'0',
         bgcolor: 'background.default',
         color: 'text.primary',
-        borderRadius: 1,
         p: 0,
+       
+       
+         
       }}
+      
     >
       <Sidebar sidebarWidth={sidebarWidth} sidebarWidthXs={sidebarWidthXs}/>
-     <Main mainbarWidth={mainbarWidth}/>  
+      <Box onClick={()=>{sideModeXz.hideSidebar()}}>
+      <Topbar sideMode={sideMode.changeSidebar}  sideModeXs={sideModeXs.changeSidebarXs} colorMode={colorMode.toggleColorMode} 
+      topbarWidth={topbarWidth} theme={theme.palette.mode}/>
+   
+     
+     <Main mainbarWidth={mainbarWidth} />
+     </Box>  
     </Box>
      
    </div>
